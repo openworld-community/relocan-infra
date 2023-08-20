@@ -13,7 +13,7 @@ env:
 
 jobs:
   prepare-hosts:
-    environment: ${{ github.base_ref }}
+    environment: ${{ github.event_name == 'push' && github.ref == 'refs/heads/test' && 'test' || github.ref == 'refs/heads/main' && 'prod' }}
     runs-on: ubuntu-20.04
     permissions: write-all
     concurrency: ${{ github.base_ref }}
@@ -31,7 +31,7 @@ jobs:
           echo -n ${{ secrets.DEPLOY_SSH_KEY }} | base64 -d | ssh-add -
           ansible-playbook --user ${{ secrets.DEPLOY_SSH_USER }} -i iaac/ansible/inventory \
           iaac/ansible/playbooks/nginx.yml \
-          --limit ${{ github.base_ref }} \
+          --limit ${{ github.environment }} \
           --extra-vars "\
           ansible_sudo_pass=\"${{ secrets.DEPLOY_USER_PASSWORD }}\"
           ansible_port=\"${{ secrets.DEPLOY_SSH_PORT }}\""
