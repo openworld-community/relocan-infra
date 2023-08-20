@@ -12,9 +12,9 @@
       name: systemli.letsencrypt
     vars:
       letsencrypt_cert:
-        name: {{ inventory_hostname }}
+        name: "{{ inventory_hostname }}"
         domains:
-          - {{ inventory_hostname }}
+          - "{{ inventory_hostname }}"
         challenge: http
         services:
           - nginx
