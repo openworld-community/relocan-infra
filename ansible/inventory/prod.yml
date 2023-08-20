@@ -4,10 +4,10 @@ all:
       children:
         nginx:
           hosts:
-            relocan.perederlano.com:
+            relocan.peredelano.com:
         app:
           hosts:
-            relocan.perederlano.com:
+            relocan.peredelano.com:
         db:
           hosts:
-            relocan.perederlano.com:
+            relocan.peredelano.com:
