@@ -21,12 +21,16 @@ jobs:
     concurrency: ${{ github.base_ref }}
 
     steps:
+      - uses: hmarr/debug-action@v2
+
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Prepare nginx hosts
+        #todo Вообще стоит наверное сделать после ревью ПРа - молекулу + чекмод + дифф + линтеры,
+        #если есть изменения, то запускаем уже раскатку конфига
         run: |
           ansible-galaxy install -r ansible/roles/requirements.yml
           eval "$(ssh-agent -s)"
