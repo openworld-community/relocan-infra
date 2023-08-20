@@ -10,17 +10,15 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
+  env_name: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' }}
 
 jobs:
   nginx-prepare-hosts:
     #todo вообще плохая идея катить по созданию ПРа, но пока так
     #в идеале катить только после ревью в общем подумать как должен выглдяеть идеальный процесс
-    environment: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' }}
+    environment: ${{ env_name }}
     runs-on: ubuntu-20.04
     permissions: write-all
-    vars:
-      env_name: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' }}
     concurrency: ${{ env_name }}
 
     steps:
