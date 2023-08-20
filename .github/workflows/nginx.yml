@@ -16,10 +16,10 @@ jobs:
   nginx-prepare-hosts:
     #todo вообще плохая идея катить по созданию ПРа, но пока так
     #в идеале катить только после ревью в общем подумать как должен выглдяеть идеальный процесс
-    environment: ${{ env_name }}
+    environment: $env_name
     runs-on: ubuntu-20.04
     permissions: write-all
-    concurrency: ${{ env_name }}
+    concurrency: $env_name
 
     steps:
       - uses: hmarr/debug-action@v2
