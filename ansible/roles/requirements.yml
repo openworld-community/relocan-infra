@@ -1,0 +1,14 @@
+- src: githubixx.docker
+  version: "10.0.0+23.0.4"
+
+- src: andrewrothstein.docker-compose
+  version: "v1.4.15"
+
+- src: nginxinc.nginx
+  version: "0.24.0"
+
+- src: nginxinc.nginx_config
+  version: "0.6.0"
+
+- src: systemli.letsencrypt
+  version: "v2.3.0"

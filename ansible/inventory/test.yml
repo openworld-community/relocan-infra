@@ -1,0 +1,13 @@
+all:
+  children:
+    test:
+      children:
+        nginx:
+          hosts:
+            test.relocan.perederlano.com:
+        app:
+          hosts:
+            test.relocan.perederlano.com:
+        db:
+          hosts:
+            test.relocan.perederlano.com:
