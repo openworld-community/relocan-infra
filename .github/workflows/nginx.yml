@@ -16,10 +16,10 @@ jobs:
   nginx-prepare-hosts:
     #todo вообще плохая идея катить по созданию ПРа, но пока так
     #в идеале катить только после ревью в общем подумать как должен выглдяеть идеальный процесс
-    environment: $env_name
+    environment: ${{ env.env_name }}
     runs-on: ubuntu-20.04
     permissions: write-all
-    concurrency: $env_name
+    concurrency: ${{ env.env_name }}
 
     steps:
       - uses: hmarr/debug-action@v2
@@ -38,8 +38,8 @@ jobs:
           echo -n ${{ secrets.DEPLOY_SSH_KEY }} | base64 -d | ssh-add -
           ansible-playbook --user ${{ secrets.DEPLOY_SSH_USER }} -i ansible/inventory \
           ansible/playbooks/nginx.yml \
-          --limit $env_name \
+          --limit {{ env.env_name }} \
           --extra-vars "\
           ansible_sudo_pass=\"${{ secrets.DEPLOY_USER_PASSWORD }}\"
           ansible_port=\"${{ secrets.DEPLOY_SSH_PORT }}\"
-          env_name=\"$env_name\""
+          env_name=\"${{ env.env_name }}\""
