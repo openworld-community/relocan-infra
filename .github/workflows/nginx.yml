@@ -41,4 +41,5 @@ jobs:
           --limit $env_name \
           --extra-vars "\
           ansible_sudo_pass=\"${{ secrets.DEPLOY_USER_PASSWORD }}\"
-          ansible_port=\"${{ secrets.DEPLOY_SSH_PORT }}\""
+          ansible_port=\"${{ secrets.DEPLOY_SSH_PORT }}\"
+          env_name=\"$env_name\""
