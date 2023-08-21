@@ -6,7 +6,7 @@
   tasks:
   - name: Install nginx
     include_role:
-      name: nginxinc.nginx_core
+      name: nginxinc.nginx
   - name: Install letsencrypt
     include_role:
       name: systemli.letsencrypt
