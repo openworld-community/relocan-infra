@@ -10,8 +10,5 @@
 - src: nginxinc.nginx_config
   version: "0.6.0"
 
-- src: nginxinc.nginx_core
-  version: "0.6.0"
-
 - src: systemli.letsencrypt
   version: "2.3.0"
