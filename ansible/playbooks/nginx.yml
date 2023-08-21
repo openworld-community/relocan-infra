@@ -1,4 +1,4 @@
-- hosts: nginx
+- hosts: '{{ env }}:nginx'
   gather_facts: yes
   become: true
   collections:
