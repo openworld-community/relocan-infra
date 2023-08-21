@@ -11,6 +11,7 @@
     include_role:
       name: systemli.letsencrypt
     vars:
+      letsencrypt_opts_extra: "--register-unsafely-without-email"
       letsencrypt_cert:
         name: "{{ inventory_hostname }}"
         domains:
