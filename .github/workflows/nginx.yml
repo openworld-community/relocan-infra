@@ -16,10 +16,10 @@ jobs:
   nginx-prepare-hosts:
     #todo вообще плохая идея катить по созданию ПРа, но пока так
     #в идеале катить только после ревью в общем подумать как должен выглдяеть идеальный процесс
-    environment: ${{ env.env_name }}
+    environment: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' }}
     runs-on: ubuntu-20.04
     permissions: write-all
-    concurrency: ${{ env.env_name }}
+    concurrency: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' }}
 
     steps:
       - uses: hmarr/debug-action@v2
