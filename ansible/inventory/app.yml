@@ -1,0 +1,6 @@
+all:
+  children:
+    app:
+      hosts:
+        relocan.peredelano.com:
+        test.relocan.peredelano.com:

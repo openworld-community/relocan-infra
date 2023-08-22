@@ -1,0 +1,32 @@
+- hosts: docker
+  gather_facts: yes
+  become: true
+  pre_tasks:
+    - name: Install pip
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - pip
+        - ca-certificates
+
+    - name: Pip remove requests
+      pip:
+        name:
+          - requests
+        state: absent
+
+    - name: Pip install necessary libraries
+      pip:
+        name:
+          - docker-compose
+          - requests==2.28.1
+          - psycopg2-binary==2.8.6
+  roles:
+    - andrewrothstein.docker-compose
+  tasks:
+    - name: Config nginx
+      include_role:
+        name: nginxinc.nginx_config
+      vars:
+

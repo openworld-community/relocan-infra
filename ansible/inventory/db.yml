@@ -1,0 +1,6 @@
+all:
+  children:
+    db:
+      hosts:
+        relocan.peredelano.com:
+        test.relocan.peredelano.com:
