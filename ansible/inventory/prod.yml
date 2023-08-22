@@ -1,13 +1,5 @@
 all:
   children:
     prod:
-      children:
-        nginx:
-          hosts:
-            relocan.perederlano.com:
-        app:
-          hosts:
-            relocan.perederlano.com:
-        db:
-          hosts:
-            relocan.perederlano.com:
+      hosts:
+        relocan.peredelano.com:

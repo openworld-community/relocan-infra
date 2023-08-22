@@ -1,5 +1,6 @@
 all:
   children:
-    test:
+    nginx:
       hosts:
+        relocan.peredelano.com:
         test.relocan.peredelano.com:

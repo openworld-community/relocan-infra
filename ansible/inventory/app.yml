@@ -1,5 +1,6 @@
 all:
   children:
-    test:
+    app:
       hosts:
+        relocan.peredelano.com:
         test.relocan.peredelano.com:

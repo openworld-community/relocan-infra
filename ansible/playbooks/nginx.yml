@@ -1,40 +1,103 @@
-- hosts: nginx
+- hosts: "nginx:&{{ env_name }}"
   gather_facts: yes
   become: true
   collections:
     - nginxinc.nginx_core
   tasks:
+  - name: Check is server available
+    uri:
+      url: "http://{{ inventory_hostname }}/"
+      return_content: yes
+    register: uri_result
+    failed_when: "'Connection reset by peer' in uri_result.msg or \
+                  'Connection timed out' in uri_result.msg or \
+                  'Name or service not known' in uri_result.msg"
+
   - name: Install nginx
     include_role:
-      name: nginxinc.nginx_core
-  - name: Install letsencrypt
-    include_role:
-      name: systemli.letsencrypt
-    vars:
-      letsencrypt_cert:
-        name: {{ inventory_hostname }}
-        domains:
-          - {{ inventory_hostname }}
-        challenge: http
-        services:
-          - nginx
+      name: nginxinc.nginx
+    when: "'https://' + inventory_hostname + '/' != uri_result.url"
+
+  - name: Create dummy webroot dir
+    file:
+      path: /var/www/dummy
+      state: directory
+      mode: '0755'
+      owner: nginx
+      group: nginx
+
+  - name: Create dummy index.html
+    copy:
+      content: "Hello world!"
+      dest: /var/www/dummy/index.html
+      owner: nginx
+      group: nginx
+
+  - name: Check index.html in webroot dir
+    stat:
+      path: /var/www/{{ inventory_hostname }}/index.html
+    register: index_html
+
+  - name: Link dummy webroot dir to inventory_hostname
+    file:
+      src: /var/www/dummy
+      dest: "/var/www/{{ inventory_hostname }}"
+      state: link
+      owner: nginx
+      group: nginx
+    when: index_html.stat.exists == false
+
+  - name: Config ssl for nginx
+    block:
+    - name: Install python3-certbot-nginx
+      package:
+        name: python3-certbot-nginx
+        state: present
+    - name: Config nginx for letsencrypt checking
+      include_role:
+        name: nginxinc.nginx_config
+      vars:
+        nginx_config_http_template: "{{ nginx_config_http_template_for_ssl_configuration }}"
+    - name: Delete letsencrypt account config
+      file:
+        path: /etc/letsencrypt/accounts
+        state: absent
+    - name: Install letsencrypt
+      include_role:
+        name: systemli.letsencrypt
+      vars:
+        letsencrypt_opts_extra: "--register-unsafely-without-email"
+        letsencrypt_cert:
+          challenge: http
+          name: "{{ inventory_hostname }}"
+          domains:
+            - "{{ inventory_hostname }}"
+          services:
+            - nginx
+          webroot_path: "/var/www/{{ inventory_hostname }}"
+          http_auth: nginx
+    - name: Add nginx user to letsencrypt group
+      user:
+        name: nginx
+        groups: letsencrypt
+        append: yes
+    - name: Add permissions for nginx user to letsencrypt dir
+      file:
+        path: /etc/letsencrypt
+        state: directory
+        mode: '0750'
+        owner: root
+        group: letsencrypt
+
+    when: "'CERTIFICATE_VERIFY_FAILED' in uri_result.msg or \
+            'http://'+inventory_hostname + '/' == uri_result.url"
+
   - name: Config nginx
     include_role:
       name: nginxinc.nginx_config
     vars:
-      nginx_config_http_template:
-        - template_file: http/default.conf.j2
-          deployment_location: /etc/nginx/conf.d/default.conf
-          backup: true
-          config:
-            servers:
-              - core:
-                  listen:
-                    - port: 80
-                rewrite:
-                  return:
-                    code: 301
-                    url: https://$host$request_uri
+      nginx_config_http_template: "{{ nginx_config_http_template_main_conf }}"
+    when: "'https://' + inventory_hostname + '/' != uri_result.url"
 #        - template_file: http/default.conf.j2
 #          deployment_location: /etc/nginx/conf.d/{{ inventory_hostname }}-app.conf
 #          backup: true
@@ -60,34 +123,3 @@
 #                          value: $host
 #                        - field: X-Real-IP
 #                          value: $remote_addr
-#        - template_file: http/default.conf.j2
-#          deployment_location: /etc/nginx/conf.d/{{ inventory_hostname }}.conf
-#          backup: true
-#          config:
-#            servers:
-#              - core:
-#                  listen:
-#                    - port: 443
-#                      ssl: true
-#                  server_name: "{{ inventory_hostname }}"
-#                  error_page:
-#                    - code:
-#                        - 500
-#                        - 502
-#                        - 503
-#                        - 504
-#                      uri: /50x.html
-#                log:
-#                  access:
-#                    - path: /var/log/nginx/{{ inventory_hostname }}.log
-#                ssl:
-#                  certificate: /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem
-#                  certificate_key: /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem
-#                locations:
-#                  - location: /50x.html
-#                    core:
-#                      root: /usr/share/nginx/html
-#                  - location: /
-#                    core:
-#                      root: /var/www/{{ inventory_hostname }}
-#                      index: index.html
