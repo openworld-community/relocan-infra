@@ -90,7 +90,6 @@
         name: systemli.letsencrypt
       vars:
         letsencrypt_opts_extra: "--register-unsafely-without-email"
-        letsencrypt_directory: "/etc/letsencrypt/{{ inventory_hostname }}"
         letsencrypt_cert:
           challenge: http
           name: "{{ inventory_hostname }}"
@@ -169,8 +168,8 @@
                   access:
                     - path: /var/log/nginx/{{ inventory_hostname }}.log
                 ssl:
-                  certificate: /etc/letsencrypt/{{ inventory_hostname }}/live/fullchain.pem
-                  certificate_key: /etc/letsencrypt/{{ inventory_hostname }}/live/privkey.pem
+                  certificate: /etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem
+                  certificate_key: /etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem
                 locations:
                   - location: /50x.html
                     core:
