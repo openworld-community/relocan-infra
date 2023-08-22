@@ -91,6 +91,7 @@
           services:
             - nginx
           webroot_path: "/var/www/{{ inventory_hostname }}"
+          http_auth: nginx
     when: "'CERTIFICATE_VERIFY_FAILED' in uri_result.msg or \
             'http://'+inventory_hostname == uri_result.url"
 
