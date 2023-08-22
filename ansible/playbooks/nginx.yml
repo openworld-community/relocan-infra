@@ -82,6 +82,7 @@
         name: systemli.letsencrypt
       vars:
         letsencrypt_opts_extra: "--register-unsafely-without-email"
+        letsencrypt_directory: "/etc/letsencrypt/{{ inventory_hostname }}"
         letsencrypt_cert:
           challenge: http
           name: "{{ inventory_hostname }}"
@@ -89,10 +90,9 @@
             - "{{ inventory_hostname }}"
           services:
             - nginx
-          webroot-path: /var/www/{{ inventory_hostname }}
-          letsencrypt_directory: /etc/letsencrypt/{{ inventory_hostname }}
+          webroot_path: "/var/www/{{ inventory_hostname }}"
     when: "'CERTIFICATE_VERIFY_FAILED' in uri_result.msg or \
-            uri_result.url == 'http://{{ inventory_hostname }}'"
+            'http://'+inventory_hostname == uri_result.url"
 
   - name: Config nginx
     include_role:
