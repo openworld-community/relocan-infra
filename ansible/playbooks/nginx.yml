@@ -81,9 +81,9 @@
                       core:
                         root: /var/www/{{ inventory_hostname }}
                         index: index.html
-    - name: Delete letsencrypt config
+    - name: Delete letsencrypt account config
       file:
-        path: /etc/letsencrypt/{{ inventory_hostname }}
+        path: /etc/letsencrypt/accounts
         state: absent
     - name: Install letsencrypt
       include_role:
