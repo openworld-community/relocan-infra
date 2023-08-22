@@ -4,9 +4,6 @@
   collections:
     - nginxinc.nginx_core
   tasks:
-  - name: Install nginx
-    include_role:
-      name: nginxinc.nginx
   - name: Check is server available
     uri:
       url: "http://{{ inventory_hostname }}/"
@@ -15,6 +12,11 @@
     failed_when: "'Connection reset by peer' in uri_result.msg or \
                   'Connection timed out' in uri_result.msg or \
                   'Name or service not known' in uri_result.msg"
+
+  - name: Install nginx
+    include_role:
+      name: nginxinc.nginx
+    when: "'https://' + inventory_hostname + '/' != uri_result.url"
 
   - name: Create dummy webroot dir
     file:
