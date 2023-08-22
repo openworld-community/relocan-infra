@@ -9,7 +9,7 @@
       name: nginxinc.nginx
   - name: Check is server available
     uri:
-      url: "http://{{ inventory_hostname }}"
+      url: "http://{{ inventory_hostname }}/"
       return_content: yes
     register: uri_result
     failed_when: "'Connection reset by peer' in uri_result.msg or \
@@ -88,14 +88,14 @@
         group: letsencrypt
 
     when: "'CERTIFICATE_VERIFY_FAILED' in uri_result.msg or \
-            'http://'+inventory_hostname == uri_result.url"
+            'http://'+inventory_hostname + '/' == uri_result.url"
 
   - name: Config nginx
     include_role:
       name: nginxinc.nginx_config
     vars:
       nginx_config_http_template: "{{ nginx_config_http_template_main_conf }}"
-    when: "'https://'+inventory_hostname != uri_result.url"
+    when: "'https://' + inventory_hostname + '/' != uri_result.url"
 #        - template_file: http/default.conf.j2
 #          deployment_location: /etc/nginx/conf.d/{{ inventory_hostname }}-app.conf
 #          backup: true
