@@ -12,8 +12,7 @@
       url: "http://{{ inventory_hostname }}"
       return_content: yes
     register: uri_result
-    failed_when: "'Connection refused' in uri_result.msg or \
-                  'Connection reset by peer' in uri_result.msg or \
+    failed_when: "'Connection reset by peer' in uri_result.msg or \
                   'Connection timed out' in uri_result.msg or \
                   'Name or service not known' in uri_result.msg"
 
