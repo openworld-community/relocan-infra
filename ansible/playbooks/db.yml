@@ -58,6 +58,8 @@
     - name: Restart docker-compose for current version database
       become: true
       become_user: docker
+      vars:
+        allow_world_readable_tmpfiles: true
       command: docker-compose -f "/opt/{{ env_name }}/docker-compose.{{ env_name }}-db.yml" up -d --force-recreate
       when: docker_compose.changed
 
