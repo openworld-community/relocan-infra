@@ -39,16 +39,16 @@ jobs:
         id: generate_password
         run: |
           echo "::add-mask::set-output name=POSTGRES_${{ env.package_name.upper() }}_PASSWORD::$(openssl rand -base64 32)"
-        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'hello-world') == '')
+        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'HELLO-WORLD') == ''
 
       - name: Add secret to github
         run: |
-          gh secret set POSTGRES_${{ github.event.client_payload.package_name.upper() || 'hello-world' }}_PASSWORD \
-          -b ${{ id.generate_password.outputs.POSTGRES_${{ github.event.client_payload.package_name.upper() || 'hello-world' }}_PASSWORD }}
+          gh secret set POSTGRES_${{ github.event.client_payload.package_name.upper() || 'HELLO-WORLD' }}_PASSWORD \
+          -b ${{ id.generate_password.outputs.POSTGRES_${{ github.event.client_payload.package_name.upper() || 'HELLO-WORLD' }}_PASSWORD }}
           -e ${{ env.env_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'hello-world') == '')
+        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'HELLO-WORLD') == '')
 
       - name: Prepare backend hosts in docker-compose
         #todo Вообще стоит наверное сделать после ревью ПРа - молекулу + чекмод + дифф + линтеры,
@@ -65,5 +65,5 @@ jobs:
           ansible_port=\"${{ secrets.DEPLOY_SSH_PORT }}\"
           env_name=\"${{ env.env_name }}\"
           POSTGRES_PASSWORD=\"${{ secrets.POSTGRES_SU_PASSWORD }}\"
-          db_user=\"${{ secrets.format('POSTGRES_{}_USER', github.event.client_payload.package_name.upper() || 'hello-world') }}\"
-          db_password=\"${{ secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'hello-world') }}\"
+          db_user=\"${{ secrets.format('POSTGRES_{}_USER', github.event.client_payload.package_name.upper() || 'HELLO-WORLD') }}\"
+          db_password=\"${{ secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name.upper() || 'HELLO-WORLD') }}\"
