@@ -44,11 +44,11 @@ jobs:
       - name: Add secret to github
         run: |
           gh secret set POSTGRES_${{ github.event.client_payload.package_name || 'hello-world' }}_PASSWORD \
-          -b ${{ id.generate_password.outputs.POSTGRES_${{ github.event.client_payload.package_name || 'hello-world' }}_PASSWORD }}
+          -b ${{ steps.generate_password.outputs.POSTGRES_${{ github.event.client_payload.package_name || 'hello-world' }}_PASSWORD }}
           -e ${{ env.env_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name || 'hello-world') == '')
+        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name || 'hello-world') == ''
 
       - name: Prepare backend hosts in docker-compose
         #todo Вообще стоит наверное сделать после ревью ПРа - молекулу + чекмод + дифф + линтеры,
