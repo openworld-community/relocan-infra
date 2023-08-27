@@ -31,10 +31,7 @@ jobs:
                 || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
     runs-on: ubuntu-20.04
     permissions: write-all
-    concurrency: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' \
-                || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' \
-                || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'test' && 'test' \
-                || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
+    concurrency: ${{ env.env_name }}
 
     steps:
       - uses: hmarr/debug-action@v2
