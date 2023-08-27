@@ -1,0 +1,47 @@
+- hosts: "nginx:&{{ env_name }}"
+  gather_facts: yes
+  become: true
+  tasks:
+    - include_role:
+        name: andrewrothstein.docker-compose
+
+    - name: Generate docker-compose file for current version
+      template:
+        src: docker-compose-{{ item }}.yml.j2
+        dest: "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ item }}.yml"
+      with_items:
+        - db
+      register: docker_compose
+
+    - name: Create network for current version
+      docker_network:
+        name: "{{ env_name }}"
+        state: present
+      when: single_host_installation
+
+    - name: Create dir
+      file:
+        path: "/opt/{{ env_name }}/{{ item }}"
+        state: directory
+        owner: 70
+        group: 70
+        recurse: yes
+      with_items:
+        - data-pg
+      when: single_host_installation
+
+    - name: Restart docker-compose for current version database
+      become: true
+      become_user: docker
+      command: docker-compose -f "/opt/{{ env_name }}/docker-compose.{{ env_name }}-db.yml" up -d --force-recreate
+      when: docker_compose.changed
+
+    - name: Check is container is running
+      docker_container_info:
+        name: "postgres-{{ env_name }}"
+      register: db_container_info
+      failed_when: db_container_info.containers[0].State != 'running'
+
+
+
+
