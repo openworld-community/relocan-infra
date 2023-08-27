@@ -2,11 +2,23 @@
   gather_facts: yes
   become: true
   tasks:
+    - name: Check If Docker Is Installed
+      command: docker --version
+      register: docker_valid
+      ignore_errors: yes
+
     - include_role:
         name: githubixx.docker
+      when: docker_valid.failed
+
+    - name: Check If Docker Compose Is Installed
+      command: docker-compose --version
+      register: docker_compose_valid
+      ignore_errors: yes
 
     - include_role:
         name: andrewrothstein.docker-compose
+      when: docker_compose_valid.failed
 
     - name: Install pip
       package:
