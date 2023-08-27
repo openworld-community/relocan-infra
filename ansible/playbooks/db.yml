@@ -38,6 +38,8 @@
       template:
         src: docker-compose-{{ item }}.yml.j2
         dest: "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ item }}.yml"
+        owner: docker
+        group: docker
       with_items:
         - db
       register: docker_compose
