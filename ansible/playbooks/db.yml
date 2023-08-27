@@ -17,13 +17,12 @@
       pip:
         name:
           - requests
-        state: absent
+        state: forcereinstall
 
     - name: Pip install necessary libraries
       pip:
         name:
           - docker-compose
-          - requests==2.28.1
           - psycopg2-binary==2.8.6
 
     - name: Create dir
