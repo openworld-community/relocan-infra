@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:13.3-alpine
+    container_name: postgres-{{ env_name }}
+    restart: unless-stopped
+    volumes:
+      - /opt/{{ env_name }}/data-pg:/var/lib/postgresql/data
+    networks:
+      - {{ env_name }}
+    ports:
+      - "127.0.0.1:{{ listening_ports['postgres'][env_name] }}:5432"
+    environment:
+      POSTGRES_PASSWORD: {{ POSTGRES_PASSWORD }}
+networks:
+  {{ env_name }}:
+    name: {{ env_name }}
+    external: true
