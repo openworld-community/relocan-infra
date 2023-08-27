@@ -15,6 +15,7 @@
       with_items:
         - pip
         - ca-certificates
+        - acl
 
     - name: Pip install necessary libraries
       pip:
