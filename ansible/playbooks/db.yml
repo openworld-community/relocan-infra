@@ -1,0 +1,83 @@
+- hosts: "db:&{{ env_name }}"
+  gather_facts: yes
+  become: true
+  tasks:
+    - name: Check If Docker Is Installed
+      command: docker --version
+      register: docker_valid
+      ignore_errors: yes
+
+    - include_role:
+        name: githubixx.docker
+      when: docker_valid.failed
+
+    - name: Check If Docker Compose Is Installed
+      command: docker-compose --version
+      register: docker_compose_valid
+      ignore_errors: yes
+
+    - include_role:
+        name: andrewrothstein.docker-compose
+      when: docker_compose_valid.failed
+
+    - name: Install pip
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - pip
+        - ca-certificates
+        - acl
+
+    - name: Pip install necessary libraries
+      pip:
+        name:
+          - docker-compose
+          - psycopg2-binary==2.8.6
+          - requests==2.28.1
+
+    - name: Create dir
+      file:
+        path: "/opt/{{ env_name }}/{{ item }}"
+        state: directory
+        owner: 70
+        group: 70
+        recurse: yes
+      with_items:
+        - data-pg
+      when: single_host_installation
+
+    - name: Generate docker-compose file for current version
+      template:
+        src: docker-compose-{{ item }}.yml.j2
+        dest: "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ item }}.yml"
+      with_items:
+        - db
+      register: docker_compose
+
+    - name: Restart docker
+      service:
+        name: docker
+        state: restarted
+
+    - name: Create network for current version
+      docker_network:
+        name: "{{ env_name }}"
+        state: present
+      when: single_host_installation
+
+    - name: Restart docker-compose for current version database
+      become: true
+      become_user: docker
+      command: docker-compose -f "/opt/{{ env_name }}/docker-compose.{{ env_name }}-db.yml" up -d --force-recreate
+      when: docker_compose.changed
+
+    - name: Check is container is running
+      docker_container_info:
+        name: "postgres-{{ env_name }}"
+      register: db_container_info
+      failed_when: db_container_info.container.State.Status != 'running'
+
+
+
+
