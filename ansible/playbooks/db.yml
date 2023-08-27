@@ -18,11 +18,13 @@
     - name: Pyopenssl upgrade
       pip:
         name:
-          - pyOpenSSL=22.2.0
+          - pyOpenSSL
+        state: absent
 
     - name: Pip install necessary libraries
       pip:
         name:
+          - pyOpenSSL
           - docker-compose
           - psycopg2-binary==2.8.6
           - requests==2.28.1
