@@ -3,6 +3,9 @@
   become: true
   tasks:
     - include_role:
+        name: githubixx.docker
+
+    - include_role:
         name: andrewrothstein.docker-compose
 
     - name: Install pip
