@@ -76,7 +76,7 @@
       docker_container_info:
         name: "postgres-{{ env_name }}"
       register: db_container_info
-      failed_when: db_container_info.containers[0].State != 'running'
+      failed_when: db_container_info.container.State.Status != 'running'
 
 
 
