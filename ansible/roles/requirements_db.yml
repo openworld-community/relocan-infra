@@ -1,2 +1,2 @@
 - src: andrewrothstein.docker-compose
-  version: "1.4.16"
+  version: "v1.4.16"
