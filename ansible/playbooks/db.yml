@@ -13,11 +13,10 @@
         - pip
         - ca-certificates
 
-    - name: Pip upgrade requests
+    - name: Pyopenssl upgrade
       pip:
         name:
           - pyOpenSSL
-          - pip
 
     - name: Pip install necessary libraries
       pip:
