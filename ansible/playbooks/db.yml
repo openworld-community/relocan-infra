@@ -60,6 +60,7 @@
       become_user: docker
       vars:
         allow_world_readable_tmpfiles: true
+        ansible_become_method: enable
       command: docker-compose -f "/opt/{{ env_name }}/docker-compose.{{ env_name }}-db.yml" up -d --force-recreate
       when: docker_compose.changed
 
