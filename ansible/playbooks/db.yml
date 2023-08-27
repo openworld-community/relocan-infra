@@ -5,6 +5,27 @@
     - include_role:
         name: andrewrothstein.docker-compose
 
+    - name: Install pip
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - pip
+        - ca-certificates
+
+    - name: Pip remove requests
+      pip:
+        name:
+          - requests
+        state: absent
+
+    - name: Pip install necessary libraries
+      pip:
+        name:
+          - docker-compose
+          - requests==2.28.1
+          - psycopg2-binary==2.8.6
+
     - name: Create dir
       file:
         path: "/opt/{{ env_name }}/{{ item }}"
