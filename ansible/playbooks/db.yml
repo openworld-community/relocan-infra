@@ -45,6 +45,11 @@
         - db
       register: docker_compose
 
+    - name: Restart docker
+      service:
+        name: docker
+        state: restarted
+
     - name: Create network for current version
       docker_network:
         name: "{{ env_name }}"
