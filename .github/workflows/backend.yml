@@ -16,19 +16,13 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  env_name: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' \
-            || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' \
-            || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'test' && 'test' \
-            || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
+  env_name: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'test' && 'test' || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
 
 jobs:
   backend-prepare-hosts:
     #todo вообще плохая идея катить по созданию ПРа, но пока так
     #в идеале катить только после ревью в общем подумать как должен выглдяеть идеальный процесс
-    environment: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' \
-                || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' \
-                || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'test' && 'test' \
-                || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
+    environment: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'test' && 'test' || github.event_name == 'workflow_dispatch' && github.event.client_payload.env == 'prod' && 'prod' }}
     runs-on: ubuntu-20.04
     permissions: write-all
     concurrency: ${{ env.env_name }}
