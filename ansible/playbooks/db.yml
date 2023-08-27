@@ -18,7 +18,7 @@
     - name: Pyopenssl upgrade
       pip:
         name:
-          - pyOpenSSL
+          - pyOpenSSL=22.2.0
 
     - name: Pip install necessary libraries
       pip:
