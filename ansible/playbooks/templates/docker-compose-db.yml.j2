@@ -8,7 +8,7 @@ services:
     networks:
       - {{ env_name }}
     ports:
-      - "127.0.0.1:{{ listening_ports['postgres'][env_name] }}:5432"
+      - "127.0.0.1:{{ dockers_configs['postgres'][env_name]['host_listen_port'] }}:5432"
     environment:
       POSTGRES_PASSWORD: {{ POSTGRES_PASSWORD }}
 networks:
