@@ -39,7 +39,7 @@ jobs:
         id: generate_password
         run: |
           echo "::add-mask::set-output name=POSTGRES_app_PASSWORD::$(openssl rand -base64 32)"
-        if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name ) == ''
+        if: secrets.[format('POSTGRES_{0}_PASSWORD', github.event.client_payload.package_name )] == ''
 
       - name: Add secret to github
         run: |
