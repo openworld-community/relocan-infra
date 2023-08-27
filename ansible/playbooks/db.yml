@@ -8,7 +8,7 @@
     - name: Install pip
       package:
         name: "{{ item }}"
-        state: forcereinstall
+        state: latest
       with_items:
         - pip
         - ca-certificates
