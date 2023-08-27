@@ -1,4 +1,4 @@
-- hosts: "nginx:&{{ env_name }}"
+- hosts: "db:&{{ env_name }}"
   gather_facts: yes
   become: true
   tasks:
