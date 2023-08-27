@@ -38,13 +38,13 @@ jobs:
       - name: Generate password for db
         id: generate_password
         run: |
-          echo "::add-mask::set-output name=POSTGRES_${{ github.event.client_payload.package_name }}_PASSWORD::$(openssl rand -base64 32)"
+          echo "::add-mask::set-output name=POSTGRES_app_PASSWORD::$(openssl rand -base64 32)"
         if: secrets.format('POSTGRES_{}_PASSWORD', github.event.client_payload.package_name || 'hello-world') == ''
 
       - name: Add secret to github
         run: |
           gh secret set POSTGRES_${{ github.event.client_payload.package_name || 'hello-world' }}_PASSWORD \
-          -b ${{ steps.generate_password.outputs.POSTGRES_${{ github.event.client_payload.package_name || 'hello-world' }}_PASSWORD }}
+          -b ${{ steps.generate_password.outputs.POSTGRES_app_PASSWORD }}
           -e ${{ env.env_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
