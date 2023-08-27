@@ -12,6 +12,8 @@
       with_items:
         - pip
         - ca-certificates
+        - python3-openssl
+        - python3-aioopenssl
 
     - name: Pyopenssl upgrade
       pip:
