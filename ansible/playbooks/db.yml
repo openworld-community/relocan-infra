@@ -5,6 +5,17 @@
     - include_role:
         name: andrewrothstein.docker-compose
 
+    - name: Create dir
+      file:
+        path: "/opt/{{ env_name }}/{{ item }}"
+        state: directory
+        owner: 70
+        group: 70
+        recurse: yes
+      with_items:
+        - data-pg
+      when: single_host_installation
+
     - name: Generate docker-compose file for current version
       template:
         src: docker-compose-{{ item }}.yml.j2
@@ -17,17 +28,6 @@
       docker_network:
         name: "{{ env_name }}"
         state: present
-      when: single_host_installation
-
-    - name: Create dir
-      file:
-        path: "/opt/{{ env_name }}/{{ item }}"
-        state: directory
-        owner: 70
-        group: 70
-        recurse: yes
-      with_items:
-        - data-pg
       when: single_host_installation
 
     - name: Restart docker-compose for current version database
