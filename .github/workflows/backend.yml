@@ -57,7 +57,9 @@ jobs:
       - name: Generate password for db
         id: generate_password
         run: |
-          echo ::add-mask::postgres_app_password=$(openssl rand -base64 32) >> $GITHUB_OUTPUT
+          echo postgres_app_password=$(openssl rand -base64 32) 
+          echo ::add-mask::$postgres_app_password
+          echo postgres_app_password=$postgres_app_password >> $GITHUB_OUTPUT
         if: ${{ steps.secret_check.outputs.length }} > 0
 
       - name: Debug var
