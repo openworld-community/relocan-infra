@@ -73,7 +73,7 @@ jobs:
           -b ${{ env.postgres_app_password }}
           -e ${{ env.env_name }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_SECRET }}
         if: ${{ steps.secret_check.outputs.pass_length }} == 0
 #
 #      - name: Prepare backend hosts in docker-compose
