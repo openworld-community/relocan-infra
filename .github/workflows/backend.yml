@@ -42,6 +42,10 @@ jobs:
         run: |
           echo "package_name=$(echo ${{ env.package_name }} | sed s/_/-/g)" >> $GITHUB_OUTPUT
 
+      - name: Debug var
+        run: |
+          echo "test var ${{ steps.replace_character.outputs.package_name }}"
+
 #      - name: Generate password for db
 #        id: generate_password
 #        run: |
