@@ -52,6 +52,7 @@ jobs:
       - name: Debug
         run: |
           echo "${{ steps.secret_check.outputs.pass }}"
+        if: not ${{ steps.secret_check.outputs.pass }}
 
       - name: Generate password for db
         id: generate_password
