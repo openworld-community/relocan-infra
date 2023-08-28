@@ -60,7 +60,7 @@ jobs:
           postgres_app_password=$(openssl rand -base64 32)
           echo ::add-mask::"$postgres_app_password"
           echo postgres_app_password=$postgres_app_password >> $GITHUB_ENV
-        if: ${{ steps.secret_check.outputs.pass_length }} == 0
+        if: steps.secret_check.outputs.pass_length == '0'
 
 #      - name: Debug var
 #        run: |
