@@ -50,7 +50,7 @@ jobs:
         id: generate_password
         run: |
           echo "::add-mask::postgress_app_password=$(openssl rand -base64 32)"
-        if: ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }} == ''
+        if: secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] == ''
 
 #      - name: Debug var
 #        run: |
