@@ -74,7 +74,7 @@ jobs:
           -e ${{ env.env_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_SECRET }}
-        if: ${{ steps.secret_check.outputs.pass_length }} == 0
+        if: steps.secret_check.outputs.pass_length == '0'
 #
 #      - name: Prepare backend hosts in docker-compose
 #        #todo Вообще стоит наверное сделать после ревью ПРа - молекулу + чекмод + дифф + линтеры,
