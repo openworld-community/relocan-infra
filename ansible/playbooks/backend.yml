@@ -40,7 +40,7 @@
       block:
       - name: Create role
         postgresql_user:
-          name: "{{ db_user }}"
+          name: "{{ replaced_symbols_package_name }}_user"
           password: "{{ db_password }}"
           login_password: "{{ POSTGRES_PASSWORD }}"
           login_host: 127.0.0.1
@@ -50,8 +50,8 @@
 
       - name: Create database
         postgresql_db:
-          name: "db_{{ package_name }}"
-          owner: "{{ package_name }}_user"
+          name: "db_{{ replaced_symbols_package_name }}"
+          owner: "{{ replaced_symbols_package_name }}_user"
           login_host: 127.0.0.1
           login_port: "{{ dockers_configs['postgres'][env]['host_listen_port'] }}"
           login_password: "{{ POSTGRES_PASSWORD }}"
@@ -62,7 +62,7 @@
 
     - name: Generate docker-compose file for current version
       template:
-        src: docker-compose-{{ item }}.yml.j2
+        src: docker-compose-backend.yml.j2
         dest: "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ package_name }}.yml"
       register: docker_compose
 
