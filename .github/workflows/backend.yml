@@ -46,24 +46,25 @@ jobs:
       - name: Secret check
         id: secret_check
         run: |
-         echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }})" >> $GITHUB_OUTPUT
+         echo "pass_length=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }} | awk '{print length}')" >> $GITHUB_OUTPUT
 #          echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', 'HELLO_WORLD' )] }})" >> $GITHUB_OUTPUT
 
       - name: Debug
         run: |
           echo "${{ steps.secret_check.outputs.pass }}"
-        if: not ${{ steps.secret_check.outputs.pass }}
+        if: ${{ steps.secret_check.outputs.pass }}
 
       - name: Generate password for db
         id: generate_password
         run: |
-          echo "postgress_app_password=$(openssl rand -base64 32)" >> $GITHUB_OUTPUT
-        if: ${{ steps.secret_check.outputs.pass }} == ''
+          echo "postgress_app_password=$(openssl rand -base64 32)"
+        if: ${{ steps.secret_check.outputs.length }} > 0
 
-#      - name: Debug var
-#        run: |
-#          echo "test var ${{ steps.generate_password.outputs.postgress_app_password }}"
-#        if: env[format('test_{0}', steps.replace_character.package_name )] == 'test'
+      - name: Debug var
+        run: |
+          echo ::add-mask::${{ steps.generate_password.outputs.postgress_app_password }}
+          echo "test var ${{ steps.generate_password.outputs.postgress_app_password }}"
+        if: ${{ steps.secret_check.outputs.length }} > 0
 #
 #      - name: Add secret to github
 #        run: |
