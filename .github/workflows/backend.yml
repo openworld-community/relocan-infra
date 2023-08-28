@@ -43,19 +43,20 @@ jobs:
         run: |
           echo "package_name=$(echo ${{ env.package_name }} | sed s/-/_/g)" >> $GITHUB_OUTPUT
 
-#      - name: Debug var
-#        run: |
-#          echo "test var ${{ steps.replace_character.outputs.package_name }}"
+      - name: Secret check
+        id: secret_check
+        run: |
+          echo "pass=${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }}
 
       - name: Generate password for db
         id: generate_password
         run: |
           echo "::add-mask::postgress_app_password=$(openssl rand -base64 32)"
-        if: env[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] == ''
+        if: ${{ steps.secret_check.outputs.pass }} == ''
 
-#      - name: Debug var
-#        run: |
-#          echo "test var ${{ secrets[format('test_{0}', steps.replace_character.outputs.package_name )] }}"
+      - name: Debug var
+        run: |
+          echo "test var ${{ steps.generate_password.outputs.POSTGRES_app_PASSWORD }}"
 #        if: env[format('test_{0}', steps.replace_character.package_name )] == 'test'
 #
 #      - name: Add secret to github
