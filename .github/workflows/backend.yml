@@ -56,7 +56,7 @@ jobs:
 
       - name: Debug var
         run: |
-          echo "test var ${{ steps.generate_password.outputs.POSTGRES_app_PASSWORD }}"
+          echo "test var ${{ steps.generate_password.outputs.postgress_app_password }}"
 #        if: env[format('test_{0}', steps.replace_character.package_name )] == 'test'
 #
 #      - name: Add secret to github
