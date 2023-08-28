@@ -57,12 +57,12 @@ jobs:
       - name: Generate password for db
         id: generate_password
         run: |
-          echo "postgress_app_password=$(openssl rand -base64 32)"
+          echo "::add-mask::postgress_app_password=$(openssl rand -base64 32)"
         if: ${{ steps.secret_check.outputs.length }} > 0
 
       - name: Debug var
         run: |
-          echo ::add-mask::${{ steps.generate_password.outputs.postgress_app_password }}
+          echo ${{ steps.generate_password.outputs.postgress_app_password }}
           echo "test var ${{ steps.generate_password.outputs.postgress_app_password }}"
         if: ${{ steps.secret_check.outputs.length }} > 0
 #
