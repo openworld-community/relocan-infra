@@ -39,7 +39,7 @@ jobs:
 
       - name: Debug var
         run: |
-          echo "env_name: ${{ env[format('test_{0}', package_name )] }}"
+          echo "env_name: ${{ env[format('test_{0}', env.package_name )] }}"
 
 #      - name: Generate password for db
 #        id: generate_password
