@@ -47,7 +47,7 @@ jobs:
         id: secret_check
         run: |
           echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', 'HELLO_WORLD' )] }})" >> $GITHUB_OUTPUT
-#          echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }})" >> $GITHUB_OUTPUT
+#         echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }})" >> $GITHUB_OUTPUT
 
 
       - name: Generate password for db
