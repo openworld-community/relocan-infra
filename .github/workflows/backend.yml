@@ -37,6 +37,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Replace character in package name var
+        id: replace_character
+        run: |
+          echo "::set-output name=package_name::${{ env.package_name//_/- }}"
 #      - name: Generate password for db
 #        id: generate_password
 #        run: |
@@ -45,8 +49,8 @@ jobs:
 
       - name: Debug var
         run: |
-          echo "test is ok"
-        if: env[format('test_{0}', env.package_name )] == 'test'
+          echo "test var ${{ secrets[format('test_{0}', steps.replace_character.package_name )] }}"
+#        if: env[format('test_{0}', steps.replace_character.package_name )] == 'test'
 #
 #      - name: Add secret to github
 #        run: |
