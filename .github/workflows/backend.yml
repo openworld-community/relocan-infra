@@ -69,7 +69,7 @@ jobs:
 
       - name: Add secret to github
         run: |
-          gh secret set POSTGRES_${{ steps.replace_character.outputs.package_name }}_PASSWORD -b ${{ env.postgres_app_password }} -e ${{ env.env_name }}
+          gh secret set POSTGRES_${{ steps.replace_character.outputs.package_name }}_PASSWORD --env ${{ env.env_name }} -b ${{ env.postgres_app_password }}
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_SECRET }}
         if: steps.secret_check.outputs.pass_length == '0'
