@@ -46,7 +46,7 @@ jobs:
       - name: Secret check
         id: secret_check
         run: |
-          echo "pass=${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }}
+          echo "pass=${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }}"
 
       - name: Generate password for db
         id: generate_password
