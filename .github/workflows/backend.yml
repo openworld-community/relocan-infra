@@ -49,9 +49,9 @@ jobs:
          echo "pass_length=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', steps.replace_character.outputs.package_name )] }} | awk '{print length}')" >> $GITHUB_OUTPUT
 #          echo "pass=$(echo ${{ secrets[format('POSTGRES_{0}_PASSWORD', 'HELLO_WORLD' )] }})" >> $GITHUB_OUTPUT
 
-#      - name: Debug
-#        run: |
-#          echo "${{ steps.secret_check.outputs.pass }}"
+      - name: Debug
+        run: |
+          echo "${{ steps.secret_check.outputs.length }}"
 #        if: ${{ steps.secret_check.outputs.pass }}
 
       - name: Generate password for db
