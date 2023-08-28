@@ -64,7 +64,7 @@ jobs:
 
       - name: Debug var
         run: |
-          echo ${{ steps.generate_password.outputs.postgres_app_password }}
+          echo ${{ env.postgres_app_password }}
         if: ${{ steps.secret_check.outputs.length }} > 0
 #
 #      - name: Add secret to github
