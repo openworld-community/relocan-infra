@@ -58,8 +58,8 @@ jobs:
         id: generate_password
         run: |
           echo postgres_app_password=$(openssl rand -base64 32) 
-          echo ::add-mask::$postgres_app_password
-          echo postgres_app_password=$postgres_app_password >> $GITHUB_OUTPUT
+          echo "::add-mask::$postgres_app_password"
+          echo "postgres_app_password=$postgres_app_password" >> $GITHUB_OUTPUT
         if: ${{ steps.secret_check.outputs.length }} > 0
 
       - name: Debug var
