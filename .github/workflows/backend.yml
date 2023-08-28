@@ -40,7 +40,7 @@ jobs:
       - name: Replace character in package name var
         id: replace_character
         run: |
-          echo "package_name=$(echo ${{ env.package_name }} | sed s/_/-/g)" >> $GITHUB_OUTPUT
+          echo "package_name=$(echo ${{ env.package_name }} | sed s/-/_/g)" >> $GITHUB_OUTPUT
 
       - name: Debug var
         run: |
