@@ -40,7 +40,7 @@ jobs:
       - name: Replace character in package name var
         id: replace_character
         run: |
-          echo "::set-output name=package_name::${{ env.package_name//_/- }}"
+          echo "::set-output name=package_name::${ env.package_name//_/- }"
 #      - name: Generate password for db
 #        id: generate_password
 #        run: |
