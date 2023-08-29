@@ -4,6 +4,7 @@ services:
     image: ghcr.io/{{ github_repository }}:{{ package_version }}
 {% else %}
     image: hello-world:latest
+    command: "tail -f /dev/null"
 {% endif %}
     container_name: {{ package_name }}-{{ env_name }}
     restart: always
