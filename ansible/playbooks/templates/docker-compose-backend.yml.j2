@@ -17,12 +17,6 @@ services:
     ports:
       - "127.0.0.1:{{ dockers_configs[package_name][env_name]['host_listen_port'] }}:3000"
 {% endif %}
-{% if 'need_db_connection' in dockers_configs[package_name].keys() %}
-{% if dockers_configs[package_name]['need_db_connection'] %}
-    depends_on:
-         - {{ env_name }}-postgres
-{% endif %}
-{% endif %}
 {% endif %}
     environment:
 {% if dockers_configs[package_name] is iterable %}
