@@ -2,11 +2,12 @@ services:
   {{ env_name }}-{{ package_name }}:
 {% if package_name != 'hello-world' %}
     image: ghcr.io/{{ github_repository }}:{{ package_version }}
+    restart: always
 {% else %}
     image: hello-world:latest
+    restart: no
 {% endif %}
     container_name: {{ package_name }}-{{ env_name }}
-    restart: always
     networks:
       - {{ env_name }}
 {% if dockers_configs[package_name] is iterable %}
