@@ -1,10 +1,10 @@
 services:
   {{ env_name }}-{{ package_name }}:
-  {%- if package_name != 'hello-world'-%}
+  {%- if package_name != 'hello-world' %}
     image: ghcr.io/{{ github_repository }}:{{ package_version }}
-  {%- else -%}
+  {%- else %}
     image: hello-world:latest
-  {%- endif -%}
+  {%- endif %}
     container_name: {{ package_name }}-{{ env_name }}
     restart: always
     networks:
@@ -27,8 +27,8 @@ services:
     {%- if dockers_configs[package_name]['need_db_connection'] %}
       db_host: {{ env_name }}-postgres
       db_port: 5432
-      db_name: db_{{ package_name }}
-      db_user: {{ package_name }}_user
+      db_name: db_{{ replaced_symbols_package_name }}
+      db_user: {{ replaced_symbols_package_name }}_user
       db_password: {{ db_password }}
     {%- endif %}
     {%- endif %}
