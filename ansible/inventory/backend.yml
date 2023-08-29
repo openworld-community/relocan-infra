@@ -1,6 +1,6 @@
 all:
   children:
-    app:
+    backend:
       hosts:
         relocan.peredelano.com:
         test.relocan.peredelano.com:

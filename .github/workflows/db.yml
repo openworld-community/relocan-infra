@@ -1,4 +1,4 @@
-name: Docker compose preparing hosts
+name: Database preparing hosts
 
 on:
   workflow_dispatch:

@@ -1,0 +1,94 @@
+- hosts: "backend:&{{ env_name }}"
+  gather_facts: yes
+  become: true
+  tasks:
+    - name: Check If Docker Is Installed
+      command: docker --version
+      register: docker_valid
+      ignore_errors: yes
+
+    - include_role:
+        name: githubixx.docker
+      when: docker_valid.failed
+
+    - name: Check If Docker Compose Is Installed
+      command: docker-compose --version
+      register: docker_compose_valid
+      ignore_errors: yes
+
+    - include_role:
+        name: andrewrothstein.docker-compose
+      when: docker_compose_valid.failed
+
+    - name: Install pip
+      package:
+        name: "{{ item }}"
+        state: latest
+      with_items:
+        - pip
+        - ca-certificates
+        - acl
+
+    - name: Pip install necessary libraries
+      pip:
+        name:
+          - docker-compose
+          - psycopg2-binary==2.8.6
+          - requests==2.28.1
+
+    - name: Create role and db
+      block:
+      - name: Create role
+        postgresql_user:
+          name: "{{ replaced_symbols_package_name }}_user"
+          password: "{{ db_password }}"
+          login_password: "{{ POSTGRES_PASSWORD }}"
+          login_host: 127.0.0.1
+          login_port: "{{ dockers_configs['postgres'][env_name]['host_listen_port'] }}"
+          state: present
+        when: dockers_configs[package_name]['need_db_connection'] == True
+
+      - name: Create database
+        postgresql_db:
+          name: "db_{{ replaced_symbols_package_name }}"
+          owner: "{{ replaced_symbols_package_name }}_user"
+          login_host: 127.0.0.1
+          login_port: "{{ dockers_configs['postgres'][env_name]['host_listen_port'] }}"
+          login_password: "{{ POSTGRES_PASSWORD }}"
+          state: present
+        when: dockers_configs[package_name]['need_db_connection'] == True
+
+      when: '"need_db_connection" in dockers_configs[package_name].keys()'
+
+    - name: Generate docker-compose file for current version
+      template:
+        src: docker-compose-backend.yml.j2
+        dest: "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ package_name }}.yml"
+      register: docker_compose
+
+    - name: Restart docker
+      service:
+        name: docker
+        state: restarted
+
+    - name: Create network for current version
+      docker_network:
+        name: "{{ env_name }}"
+        state: present
+      when: single_host_installation
+
+    - name: Restart docker-compose for current version database
+      become: true
+      become_user: docker
+      command: docker-compose -f "/opt/{{ env_name }}/docker-compose.{{ env_name }}-{{ package_name }}.yml" up -d --force-recreate
+      when: docker_compose.changed
+
+    - name: Check is container is running
+      docker_container_info:
+        name: "{{ package_name }}-{{ env_name }}"
+      register: db_container_info
+      failed_when: db_container_info.container.State.Status != 'running' and package_name != 'hello-world'
+
+
+
+
