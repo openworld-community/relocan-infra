@@ -1,6 +1,9 @@
 name: Docker-compose prepare host for backend
 
 on:
+  repository_dispatch:
+    types:
+      - "backend"
   pull_request:
     branches:
       - "test"
@@ -18,8 +21,6 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   env_name: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'test' && 'test' || github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main' && 'prod' || github.event.client_payload.env == 'test' && 'test' || github.event.client_payload.env == 'prod' && 'prod' }}
   package_name: ${{ github.event.client_payload.package_name || 'hello-world' }}
-  test_hello-world: 'test'
-  postgress_hello_world_password: 'test_from_env'
 
 jobs:
   backend-prepare-hosts:
