@@ -44,7 +44,7 @@
           password: "{{ db_password }}"
           login_password: "{{ POSTGRES_PASSWORD }}"
           login_host: 127.0.0.1
-          login_port: "{{ dockers_configs['postgres'][env]['host_listen_port'] }}"
+          login_port: "{{ dockers_configs['postgres'][env_name]['host_listen_port'] }}"
           state: present
         when: dockers_configs[package_name]['need_db_connection'] == True
 
@@ -53,7 +53,7 @@
           name: "db_{{ replaced_symbols_package_name }}"
           owner: "{{ replaced_symbols_package_name }}_user"
           login_host: 127.0.0.1
-          login_port: "{{ dockers_configs['postgres'][env]['host_listen_port'] }}"
+          login_port: "{{ dockers_configs['postgres'][env_name]['host_listen_port'] }}"
           login_password: "{{ POSTGRES_PASSWORD }}"
           state: present
         when: dockers_configs[package_name]['need_db_connection'] == True
