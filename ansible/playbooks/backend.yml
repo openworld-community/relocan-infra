@@ -87,7 +87,7 @@
       docker_container_info:
         name: "{{ package_name }}-{{ env_name }}"
       register: db_container_info
-      failed_when: db_container_info.container.State.Status != 'running'
+      failed_when: db_container_info.container.State.Status != 'running' and package_name != 'hello-world'
 
 
 
