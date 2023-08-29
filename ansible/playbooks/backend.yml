@@ -46,7 +46,7 @@
           login_host: 127.0.0.1
           login_port: "{{ dockers_configs['postgres'][env]['host_listen_port'] }}"
           state: present
-        when: docker_configs[package_name]['need_db_connection'] == True
+        when: dockers_configs[package_name]['need_db_connection'] == True
 
       - name: Create database
         postgresql_db:
@@ -56,9 +56,9 @@
           login_port: "{{ dockers_configs['postgres'][env]['host_listen_port'] }}"
           login_password: "{{ POSTGRES_PASSWORD }}"
           state: present
-        when: docker_configs[package_name]['need_db_connection'] == True
+        when: dockers_configs[package_name]['need_db_connection'] == True
 
-      when: '"need_db_connection" in docker_configs[package_name].keys()'
+      when: '"need_db_connection" in dockers_configs[package_name].keys()'
 
     - name: Generate docker-compose file for current version
       template:
