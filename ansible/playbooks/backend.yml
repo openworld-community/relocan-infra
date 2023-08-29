@@ -58,7 +58,7 @@
           state: present
         when: docker_configs[package_name]['need_db_connection'] == True
 
-      when: 'need_db_connection' in docker_configs[package_name].keys()
+      when: '"need_db_connection" in docker_configs[package_name].keys()'
 
     - name: Generate docker-compose file for current version
       template:
