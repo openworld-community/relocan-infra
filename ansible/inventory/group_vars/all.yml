@@ -1,10 +1,16 @@
 ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 allow_world_readable_tmpfiles: true
 
-listening_ports:
+dockers_configs:
   postgres:
-    prod: 5432
-    test: 5433
+    prod:
+      host_listen_port: 5432
+    test:
+      host_listen_port: 5433
   hello-world:
-    prod: 8080
-    test: 8081
+    need_db_connection: true
+    prod:
+      host_listen_port: 8080
+    test:
+      host_listen_port: 8081
+
