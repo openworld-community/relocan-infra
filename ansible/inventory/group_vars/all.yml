@@ -13,3 +13,12 @@ dockers_configs:
       host_listen_port: 8080
     test:
       host_listen_port: 8081
+
+    env_name: test
+    package_name: hello-world
+    dockers_configs:
+      hello-world:
+        need_db_connection: true
+        test:
+          host_listen_port: 8081
+    db_password: test_pass

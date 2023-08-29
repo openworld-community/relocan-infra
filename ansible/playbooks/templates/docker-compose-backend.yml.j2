@@ -1,37 +1,41 @@
 services:
   {{ env_name }}-{{ package_name }}:
-  {%- if package_name != 'hello-world' %}
+{% if package_name != 'hello-world' %}
     image: ghcr.io/{{ github_repository }}:{{ package_version }}
-  {%- else %}
+{% else %}
     image: hello-world:latest
-  {%- endif %}
+{% endif %}
     container_name: {{ package_name }}-{{ env_name }}
     restart: always
     networks:
       - {{ env_name }}
-    {%- if 'host_listen_port' in dockers_configs[package_name][env_name].keys() and 'package_listen_port' in dockers_configs[package_name][env_name].keys() %}
+{% if dockers_configs[package_name] is iterable %}
+{% if 'host_listen_port' in dockers_configs[package_name][env_name].keys() and 'package_listen_port' in dockers_configs[package_name][env_name].keys() %}
     ports:
       - "127.0.0.1:{{ dockers_configs[package_name][env_name]['host_listen_port'] }}:{{ dockers_configs[package_name][env_name]['package_listen_port'] }}"
-    {%- elif 'host_listen_port' in dockers_configs[package_name][env_name].keys() %}
+{% elif 'host_listen_port' in dockers_configs[package_name][env_name].keys() %}
     ports:
       - "127.0.0.1:{{ dockers_configs[package_name][env_name]['host_listen_port'] }}:3000"
-    {%- endif %}
-    {%- if 'need_db_connection' in dockers_configs[package_name].keys() %}
-    {%- if dockers_configs[package_name]['need_db_connection'] %}
+{% endif %}
+{% if 'need_db_connection' in dockers_configs[package_name].keys() %}
+{% if dockers_configs[package_name]['need_db_connection'] %}
     depends_on:
          - {{ env_name }}-postgres
-    {%- endif %}
-    {%- endif %}
+{% endif %}
+{% endif %}
+{% endif %}
     environment:
-    {%- if 'need_db_connection' in dockers_configs[package_name].keys() %}
-    {%- if dockers_configs[package_name]['need_db_connection'] %}
+{% if dockers_configs[package_name] is iterable %}
+{% if 'need_db_connection' in dockers_configs[package_name].keys() %}
+{% if dockers_configs[package_name]['need_db_connection'] %}
       db_host: {{ env_name }}-postgres
       db_port: 5432
       db_name: db_{{ replaced_symbols_package_name }}
       db_user: {{ replaced_symbols_package_name }}_user
       db_password: {{ db_password }}
-    {%- endif %}
-    {%- endif %}
+{% endif %}
+{% endif %}
+{% endif %}
       dummy: dummy
 networks:
   {{ env_name }}:
